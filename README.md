@@ -1,6 +1,6 @@
 # Craft Sitemap
 
-A simple plugin for [Craft](http://craftcms.com) that generates a sitemap.xml based on enabled sections.
+A simple plugin for [Craft](http://craftcms.com) that generates a [sitemap.xml](http://www.sitemaps.org/) based on enabled sections.
 
 ![Settings](http://i.imgur.com/DhXTn2f.jpg)
 
