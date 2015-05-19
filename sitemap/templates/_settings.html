@@ -1,0 +1,76 @@
+{% import '_includes/forms' as forms %}
+
+{% set frequencyOptions = {
+  'always': 'always',
+  'hourly': 'hourly',
+  'daily': 'daily',
+  'weekly': 'weekly',
+  'monthly': 'monthly',
+  'yearly': 'yearly',
+  'never': 'never',
+} %}
+
+{% set priorityOptions = {
+  '1.0': '1.0',
+  '0.9': '0.9',
+  '0.8': '0.8',
+  '0.7': '0.7',
+  '0.6': '0.6',
+  '0.5': '0.5',
+  '0.4': '0.4',
+  '0.3': '0.3',
+  '0.2': '0.2',
+  '0.1': '0.1',
+  '0.0': '0.0',
+} %}
+
+<table class="data fullwidth">
+  <thead>
+    <th>{{ 'Enabled'|t }}</th>
+    <th>{{ 'Section'|t }} </th>
+    <th>{{ 'URL Format'|t }}</th>
+    <th>{{ 'Entries'|t }}</th>
+    <th>{{ 'Change Frequency'|t }}</th>
+    <th>{{ 'Priority'|t }}</th>
+  </thead>
+  <tbody>
+    {% for section in sections %}
+      <tr>
+        <td>
+          {{- forms.checkbox({
+            name: "enabled[#{section.id}]",
+            value: true,
+            checked: settings.sections[section.id] is defined
+          }) -}}
+        </td>
+        <td>
+          {{- section -}}
+        </td>
+        <td dir="ltr">
+          {%- if section.isHomepage() -%}
+            <div data-icon="home" title="{{ 'Homepage'|t }}"></div>
+          {%- else -%}
+            {{ section.urlFormat }}
+          {%- endif -%}
+        </td>
+        <td>
+          {{- craft.entries.section(section).limit(null)|length -}}
+        </td>
+        <td>
+          {{- forms.selectField({
+            name: "changefreq[#{section.id}]",
+            options: frequencyOptions,
+            value: settings.sections[section.id].changefreq|default('weekly')
+          }) -}}
+        </td>
+        <td>
+          {{- forms.selectField({
+            name: "priority[#{section.id}]",
+            options: priorityOptions,
+            value: settings.sections[section.id].priority|default(section.isHomepage() ? '1.0' : '0.5')
+          }) -}}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
