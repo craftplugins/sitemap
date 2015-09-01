@@ -1,5 +1,4 @@
 <?php
-
 namespace Craft;
 
 class SitemapPlugin extends BasePlugin
@@ -84,7 +83,7 @@ class SitemapPlugin extends BasePlugin
 	}
 
     /**
-     * Registers /sitemap.xml as a route
+     * Registers the /sitemap.xml route
      * @return array
      */
     public function registerSiteRoutes()
