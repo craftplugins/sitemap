@@ -7,14 +7,13 @@ class SitemapService extends BaseApplicationComponent
     /**
      * Returns all sections that have a URL format defined.
      */
-    public function getSections()
+    public function getSectionsWithUrls()
     {
         $enabledSections = $this->settings['sections'];
         $sections = array();
 
         foreach (craft()->sections->allSections as $section) {
-            if (($section->isHomepage() || $section->urlFormat)
-                && in_array($section->id, $enabledSections)) {
+            if ($section->isHomepage() || $section->urlFormat) {
                 $sections[] = $section;
             }
         }
@@ -43,7 +42,7 @@ class SitemapService extends BaseApplicationComponent
         // Get settings
         $settings = $this->settings;
 
-        foreach ($this->sections as $section) {
+        foreach ($this->sectionsWithUrls as $section) {
             $changefreq = $settings['sections'][$section->id]['changefreq'];
             $priority = $settings['sections'][$section->id]['priority'];
 

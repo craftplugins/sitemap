@@ -52,7 +52,7 @@ class SitemapPlugin extends BasePlugin
     public function getSettingsHtml()
     {
         return craft()->templates->render('sitemap/_settings', array(
-            'sections' => craft()->sitemap->sections,
+            'sections' => craft()->sitemap->sectionsWithUrls,
             'settings' => $this->settings,
         ));
     }
@@ -66,7 +66,7 @@ class SitemapPlugin extends BasePlugin
         $settings = $this->defineSettings();
 
 		// Loop through valid sections
-		foreach (craft()->sitemap->sections as $section)
+		foreach (craft()->sitemap->sectionsWithUrls as $section)
 		{
 			// Check if the section is enabled
 			if ($input['enabled'][$section->id])
