@@ -115,29 +115,13 @@ class SitemapService extends BaseApplicationComponent
      */
     protected function getElementUrlForLocale($element, $locale)
     {
-        $uri = craft()->elements->getElementUriForLocale($element->id, $locale);
-
-        if ($uri !== null) {
-            // Get the current siteUrl
-            $siteUrl = craft()->getSiteUrl();
-
-            // Get the siteUrl value for the locale
-            $localeSiteUrl = craft()->config->getLocalized('siteUrl', $locale);
-
-            // Temporarily set Craft to use this element's locale's site URL
-            craft()->setSiteUrl($localeSiteUrl);
-
-            // Get the URL
-            if ($uri == '__home__') {
-                $url = UrlHelper::getSiteUrl();
-            } else {
-                $url = UrlHelper::getSiteUrl($uri);
-            }
-
-            // Restore the siteUrl value
-            craft()->setSiteUrl($siteUrl);
-
-            return $url;
-        }
+        $oldLocale = $element->locale;
+        $oldUri = $element->uri;
+        $element->locale = $locale;
+        $element->uri = craft()->elements->getElementUriForLocale($element->id, $locale);
+        $url = $element->getUrl();
+        $element->locale = $oldLocale;
+        $element->uri = $oldUri;
+        return $url;
     }
 }
