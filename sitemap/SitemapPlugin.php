@@ -1,10 +1,11 @@
 <?php
+
 namespace Craft;
 
 class SitemapPlugin extends BasePlugin
 {
     /**
-     * @inheritDoc IPlugin::getName()
+     * {@inheritdoc} IPlugin::getName()
      */
     public function getName()
     {
@@ -12,7 +13,7 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc IPlugin::getVersion()
+     * {@inheritdoc} IPlugin::getVersion()
      */
     public function getVersion()
     {
@@ -20,7 +21,7 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc IPlugin::getDeveloper()
+     * {@inheritdoc} IPlugin::getDeveloper()
      */
     public function getDeveloper()
     {
@@ -28,7 +29,7 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc IPlugin::getDeveloperUrl()
+     * {@inheritdoc} IPlugin::getDeveloperUrl()
      */
     public function getDeveloperUrl()
     {
@@ -36,7 +37,7 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc BaseSavableComponentType::defineSettings()
+     * {@inheritdoc} BaseSavableComponentType::defineSettings()
      */
     protected function defineSettings()
     {
@@ -46,7 +47,7 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc BaseSavableComponentType::getSettingsHtml()
+     * {@inheritdoc} BaseSavableComponentType::getSettingsHtml()
      */
     public function getSettingsHtml()
     {
@@ -57,33 +58,32 @@ class SitemapPlugin extends BasePlugin
     }
 
     /**
-     * @inheritDoc BaseSavableComponentType::prepSettings()
+     * {@inheritdoc} BaseSavableComponentType::prepSettings()
      */
     public function prepSettings($input)
     {
         // We’re rewriting every time
         $settings = $this->defineSettings();
 
-		// Loop through valid sections
-		foreach (craft()->sitemap->sectionsWithUrls as $section)
-		{
-			// Check if the section is enabled
-			if ($input['enabled'][$section->id])
-			{
-				// If it is, save the changefreq and priority values into settings
-				$settings['sections'][$section->id] = array(
-					'changefreq' => $input['changefreq'][$section->id],
-					'priority' => $input['priority'][$section->id],
-				);
-			}
-		}
+        // Loop through valid sections
+        foreach (craft()->sitemap->sectionsWithUrls as $section) {
+            // Check if the section is enabled
+            if ($input['enabled'][$section->id]) {
+                // If it is, save the changefreq and priority values into settings
+                $settings['sections'][$section->id] = array(
+                    'changefreq' => $input['changefreq'][$section->id],
+                    'priority' => $input['priority'][$section->id],
+                );
+            }
+        }
 
-		// Return the parsed settings ready for the database
-		return $settings;
-	}
+        // Return the parsed settings ready for the database
+        return $settings;
+    }
 
     /**
-     * Registers the /sitemap.xml route
+     * Registers the /sitemap.xml route.
+     *
      * @return array
      */
     public function registerSiteRoutes()

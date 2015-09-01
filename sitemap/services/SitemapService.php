@@ -1,10 +1,12 @@
 <?php
+
 namespace Craft;
 
 class SitemapService extends BaseApplicationComponent
 {
     /**
-     * Returns all Craft sections that have URLs
+     * Returns all Craft sections that have URLs.
+     *
      * @return array An array of Section instances
      */
     public function getSectionsWithUrls()
@@ -22,7 +24,8 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Renders the sitemap
+     * Renders the sitemap.
+     *
      * @return string XML sitemap
      */
     public function getSitemap()
@@ -94,7 +97,8 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Gets the plugin settings
+     * Gets the plugin settings.
+     *
      * @return array
      */
     protected function getSettings()
