@@ -9,12 +9,12 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSections()
     {
-    	$enabledSections = $this->settings['sections'];
+        $enabledSections = $this->settings['sections'];
         $sections = array();
 
         foreach (craft()->sections->allSections as $section) {
             if (($section->isHomepage() || $section->urlFormat)
-            	&& in_array($section->id, $enabledSections)) {
+                && in_array($section->id, $enabledSections)) {
                 $sections[] = $section;
             }
         }
@@ -22,26 +22,26 @@ class SitemapService extends BaseApplicationComponent
         return $sections;
     }
 
-	/**
-	 * Builds the sitemap based on the plugin settings as returns a string
-	 */
-	public function getSitemap()
-	{
-		$dom = new \DOMDocument('1.0', 'utf-8');
+    /**
+     * Builds the sitemap based on the plugin settings as returns a string.
+     */
+    public function getSitemap()
+    {
+        $dom = new \DOMDocument('1.0', 'utf-8');
 
-		// Format XML output when devMode is active for easier debugging
-		if (craft()->config->get('devMode')) {
-			$dom->formatOutput = true;
-		}
+        // Format XML output when devMode is active for easier debugging
+        if (craft()->config->get('devMode')) {
+            $dom->formatOutput = true;
+        }
 
-		$urlset = $dom->createElement('urlset');
-		$urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-		$urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+        $urlset = $dom->createElement('urlset');
+        $urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 
-		$dom->appendChild($urlset);
+        $dom->appendChild($urlset);
 
-		// Get settings
-		$settings = $this->settings;
+        // Get settings
+        $settings = $this->settings;
 
         foreach ($this->sections as $section) {
             $changefreq = $settings['sections'][$section->id]['changefreq'];
@@ -88,59 +88,56 @@ class SitemapService extends BaseApplicationComponent
             }
         }
 
-		return $dom->saveXML();
-	}
+        return $dom->saveXML();
+    }
 
-	/**
-	 * Get the plugin settings
-	 */
-	protected function getSettings()
-	{
-		$plugin = craft()->plugins->getPlugin('sitemap');
+    /**
+     * Get the plugin settings.
+     */
+    protected function getSettings()
+    {
+        $plugin = craft()->plugins->getPlugin('sitemap');
 
-		if (is_null($plugin))
-		{
-			return array();
-		}
+        if (is_null($plugin)) {
+            return array();
+        }
 
-		return $plugin->settings;
-	}
+        return $plugin->settings;
+    }
 
-	/**
-	 * A modified copy of BaseElementModel::getUrl
-	 * @param  Element $element
-	 * @param  Locale $locale
-	 * @return string
-	 */
-	protected function getElementUrlForLocale($element, $locale)
-	{
-		$uri = craft()->elements->getElementUriForLocale($element->id, $locale);
+    /**
+     * A modified copy of BaseElementModel::getUrl.
+     *
+     * @param Element $element
+     * @param Locale  $locale
+     *
+     * @return string
+     */
+    protected function getElementUrlForLocale($element, $locale)
+    {
+        $uri = craft()->elements->getElementUriForLocale($element->id, $locale);
 
-		if ($uri !== null)
-		{
-			// Get the current siteUrl
-			$siteUrl = craft()->getSiteUrl();
+        if ($uri !== null) {
+            // Get the current siteUrl
+            $siteUrl = craft()->getSiteUrl();
 
-			// Get the siteUrl value for the locale
-			$localeSiteUrl = craft()->config->getLocalized('siteUrl', $locale);
+            // Get the siteUrl value for the locale
+            $localeSiteUrl = craft()->config->getLocalized('siteUrl', $locale);
 
-			// Temporarily set Craft to use this element's locale's site URL
-			craft()->setSiteUrl($localeSiteUrl);
+            // Temporarily set Craft to use this element's locale's site URL
+            craft()->setSiteUrl($localeSiteUrl);
 
-			// Get the URL
-			if ($uri == '__home__')
-			{
-				$url = UrlHelper::getSiteUrl();
-			}
-			else
-			{
-				$url = UrlHelper::getSiteUrl($uri);
-			}
+            // Get the URL
+            if ($uri == '__home__') {
+                $url = UrlHelper::getSiteUrl();
+            } else {
+                $url = UrlHelper::getSiteUrl($uri);
+            }
 
-			// Restore the siteUrl value
-			craft()->setSiteUrl($siteUrl);
+            // Restore the siteUrl value
+            craft()->setSiteUrl($siteUrl);
 
-			return $url;
-		}
-	}
+            return $url;
+        }
+    }
 }
