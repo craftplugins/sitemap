@@ -63,7 +63,7 @@ class SitemapService extends BaseApplicationComponent
 					foreach ($enabledLocales as $locale)
 					{
 						$alternateUri = craft()->elements->getElementUriForLocale($entry->id, $locale);
-						if ($alternateUri == '__home__')
+						if ($section->isHomepage())
 						{
 							$alternateUrl = craft()->config->getLocalized('siteUrl', $locale);
 						} else {
