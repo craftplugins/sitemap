@@ -29,6 +29,11 @@ class SitemapService extends BaseApplicationComponent
 	{
 		$dom = new \DOMDocument('1.0', 'utf-8');
 
+		// Format XML output when devMode is active for easier debugging
+		if (craft()->config->get('devMode')) {
+			$dom->formatOutput = true;
+		}
+
 		$urlset = $dom->createElement('urlset');
 		$urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
