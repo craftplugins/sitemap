@@ -31,6 +31,7 @@ class SitemapService extends BaseApplicationComponent
 
 		$urlset = $dom->createElement('urlset');
 		$urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+		$urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 
 		$dom->appendChild($urlset);
 
@@ -57,6 +58,24 @@ class SitemapService extends BaseApplicationComponent
 					$urlLoc = $dom->createElement('loc');
 					$urlLoc->nodeValue = $entry->getUrl();
 					$url->appendChild($urlLoc);
+
+					$enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
+					foreach ($enabledLocales as $locale)
+					{
+						$alternateUri = craft()->elements->getElementUriForLocale($entry->id, $locale);
+						if ($alternateUri == '__home__')
+						{
+							$alternateUrl = craft()->config->getLocalized('siteUrl', $locale);
+						} else {
+							$alternateUrl = UrlHelper::getSiteUrl($alternateUri);
+						}
+
+						$alternateLoc = $dom->createElement('xhtml:link');
+						$alternateLoc->setAttribute('rel', 'alternate');
+						$alternateLoc->setAttribute('hreflang', $locale);
+						$alternateLoc->setAttribute('href', $alternateUrl);
+						$url->appendChild($alternateLoc);
+					}
 
 					$urlModified = $dom->createElement('lastmod');
 					$urlModified->nodeValue = $entry->postDate->w3c();
