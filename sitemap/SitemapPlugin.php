@@ -4,66 +4,66 @@ namespace Craft;
 
 class SitemapPlugin extends BasePlugin
 {
-	/**
-	 * The name
-	 */
-	public function getName()
-	{
-		return 'Sitemap';
-	}
+    /**
+     * @inheritDoc IPlugin::getName()
+     */
+    public function getName()
+    {
+        return 'Sitemap';
+    }
 
-	/**
-	 * The version
-	 */
-	public function getVersion()
-	{
-		return '0.9.0';
-	}
+    /**
+     * @inheritDoc IPlugin::getVersion()
+     */
+    public function getVersion()
+    {
+        return '0.9.0';
+    }
 
-	/**
-	 * The person
-	 */
-	public function getDeveloper()
-	{
-		return 'Joshua Baker';
-	}
+    /**
+     * @inheritDoc IPlugin::getDeveloper()
+     */
+    public function getDeveloper()
+    {
+        return 'Joshua Baker';
+    }
 
-	/**
-	 * Follow?
-	 */
-	public function getDeveloperUrl()
-	{
-		return 'http://joshuabaker.com/';
-	}
+    /**
+     * @inheritDoc IPlugin::getDeveloperUrl()
+     */
+    public function getDeveloperUrl()
+    {
+        return 'http://joshuabaker.com/';
+    }
 
-	/**
-	 * Define the settings
-	 */
-	protected function defineSettings()
-	{
-		return array(
-			'sections' => array(),
-		);
-	}
+    /**
+     * @inheritDoc BaseSavableComponentType::defineSettings()
+     */
+    protected function defineSettings()
+    {
+        return array(
+            'sections' => array(),
+        );
+    }
 
-	/**
-	 * Render the plugin settings page
-	 */
-	public function getSettingsHtml()
-	{
-		return craft()->templates->render('sitemap/_settings', array(
-			'sections' => craft()->sitemap->sections,
-			'settings' => $this->settings,
-		));
-	}
+    /**
+     * @inheritDoc BaseSavableComponentType::getSettingsHtml()
+     */
+    public function getSettingsHtml()
+    {
+        return craft()->templates->render('sitemap/_settings', array(
+            'sections' => craft()->sitemap->sections,
+            'settings' => $this->settings,
+        ));
+    }
 
-	/**
-	 * Parse the settings before saving to the database
-	 */
-	public function prepSettings($input)
-	{
-		// We’re rewriting every time
-		$settings = $this->defineSettings();
+    /**
+     * @inheritDoc BaseSavableComponentType::prepSettings()
+     */
+    public function prepSettings($input)
+    {
+        // We’re rewriting every time
+        $settings = $this->defineSettings();
 
 		// Loop through valid sections
 		foreach (craft()->sitemap->sections as $section)
@@ -83,15 +83,16 @@ class SitemapPlugin extends BasePlugin
 		return $settings;
 	}
 
-	/**
-	 * Register sitemap.xml as a route
-	 */
-	public function registerSiteRoutes()
-	{
-		return array(
-			'sitemap.xml' => array(
-				'action' => 'sitemap/sitemap/output'
-			)
-		);
-	}
+    /**
+     * Registers /sitemap.xml as a route
+     * @return array
+     */
+    public function registerSiteRoutes()
+    {
+        return array(
+            'sitemap.xml' => array(
+                'action' => 'sitemap/sitemap/output',
+            ),
+        );
+    }
 }

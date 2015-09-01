@@ -4,23 +4,23 @@ namespace Craft;
 
 class SitemapService extends BaseApplicationComponent
 {
-	/**
-	 * Returns all sections that have a URL format defined
-	 */
-	public function getSections()
-	{
-		$sections = array();
+    /**
+     * Returns all sections that have a URL format defined.
+     */
+    public function getSections()
+    {
+    	$enabledSections = $this->settings['sections'];
+        $sections = array();
 
-		foreach (craft()->sections->allSections as $section)
-		{
-			if ($section->isHomepage() || $section->urlFormat)
-			{
-				$sections[] = $section;
-			}
-		}
+        foreach (craft()->sections->allSections as $section) {
+            if (($section->isHomepage() || $section->urlFormat)
+            	&& in_array($section->id, $enabledSections)) {
+                $sections[] = $section;
+            }
+        }
 
-		return $sections;
-	}
+        return $sections;
+    }
 
 	/**
 	 * Builds the sitemap based on the plugin settings as returns a string
@@ -43,55 +43,50 @@ class SitemapService extends BaseApplicationComponent
 		// Get settings
 		$settings = $this->settings;
 
-		foreach ($this->sections as $section)
-		{
-			if ( ! empty($settings['sections'][$section->id]))
-			{
-				$changefreq = $settings['sections'][$section->id]['changefreq'];
-				$priority = $settings['sections'][$section->id]['priority'];
+        foreach ($this->sections as $section) {
+            $changefreq = $settings['sections'][$section->id]['changefreq'];
+            $priority = $settings['sections'][$section->id]['priority'];
 
-				$criteria = craft()->elements->getCriteria(ElementType::Entry);
+            $criteria = craft()->elements->getCriteria(ElementType::Entry);
 
-				$entries  = $criteria->find(array(
-					'section' => $section->handle
-				));
+            $entries = $criteria->find(array(
+                'section' => $section->handle,
+            ));
 
-				foreach ($entries as $entry)
-				{
-					$url = $dom->createElement('url');
+            foreach ($entries as $entry) {
+                $url = $dom->createElement('url');
 
-					$urlLoc = $dom->createElement('loc');
-					$urlLoc->nodeValue = $entry->getUrl();
-					$url->appendChild($urlLoc);
+                $urlLoc = $dom->createElement('loc');
+                $urlLoc->nodeValue = $entry->getUrl();
+                $url->appendChild($urlLoc);
 
-					$enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
+                $enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
 
-					foreach ($enabledLocales as $locale) {
-						$entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
+                foreach ($enabledLocales as $locale) {
+                    $entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
 
-						$localeLoc = $dom->createElement('xhtml:link');
-						$localeLoc->setAttribute('rel', 'alternate');
-						$localeLoc->setAttribute('hreflang', $locale);
-						$localeLoc->setAttribute('href', $entryLocaleUrl);
-						$url->appendChild($localeLoc);
-					}
+                    $localeLoc = $dom->createElement('xhtml:link');
+                    $localeLoc->setAttribute('rel', 'alternate');
+                    $localeLoc->setAttribute('hreflang', $locale);
+                    $localeLoc->setAttribute('href', $entryLocaleUrl);
+                    $url->appendChild($localeLoc);
+                }
 
-					$urlModified = $dom->createElement('lastmod');
-					$urlModified->nodeValue = $entry->postDate->w3c();
-					$url->appendChild($urlModified);
+                $urlModified = $dom->createElement('lastmod');
+                $urlModified->nodeValue = $entry->postDate->w3c();
+                $url->appendChild($urlModified);
 
-					$urlChangeFreq = $dom->createElement('changefreq');
-					$urlChangeFreq->nodeValue = $changefreq;
-					$url->appendChild($urlChangeFreq);
+                $urlChangeFreq = $dom->createElement('changefreq');
+                $urlChangeFreq->nodeValue = $changefreq;
+                $url->appendChild($urlChangeFreq);
 
-					$urlPriority = $dom->createElement('priority');
-					$urlPriority->nodeValue = $priority;
-					$url->appendChild($urlPriority);
+                $urlPriority = $dom->createElement('priority');
+                $urlPriority->nodeValue = $priority;
+                $url->appendChild($urlPriority);
 
-					$urlset->appendChild($url);
-				}
-			}
-		}
+                $urlset->appendChild($url);
+            }
+        }
 
 		return $dom->saveXML();
 	}
