@@ -60,21 +60,15 @@ class SitemapService extends BaseApplicationComponent
 					$url->appendChild($urlLoc);
 
 					$enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
-					foreach ($enabledLocales as $locale)
-					{
-						$alternateUri = craft()->elements->getElementUriForLocale($entry->id, $locale);
-						if ($section->isHomepage())
-						{
-							$alternateUrl = craft()->config->getLocalized('siteUrl', $locale);
-						} else {
-							$alternateUrl = UrlHelper::getSiteUrl($alternateUri);
-						}
 
-						$alternateLoc = $dom->createElement('xhtml:link');
-						$alternateLoc->setAttribute('rel', 'alternate');
-						$alternateLoc->setAttribute('hreflang', $locale);
-						$alternateLoc->setAttribute('href', $alternateUrl);
-						$url->appendChild($alternateLoc);
+					foreach ($enabledLocales as $locale) {
+						$entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
+
+						$localeLoc = $dom->createElement('xhtml:link');
+						$localeLoc->setAttribute('rel', 'alternate');
+						$localeLoc->setAttribute('hreflang', $locale);
+						$localeLoc->setAttribute('href', $entryLocaleUrl);
+						$url->appendChild($localeLoc);
 					}
 
 					$urlModified = $dom->createElement('lastmod');
@@ -110,5 +104,43 @@ class SitemapService extends BaseApplicationComponent
 		}
 
 		return $plugin->settings;
+	}
+
+	/**
+	 * A modified copy of BaseElementModel::getUrl
+	 * @param  Element $element
+	 * @param  Locale $locale
+	 * @return string
+	 */
+	protected function getElementUrlForLocale($element, $locale)
+	{
+		$uri = craft()->elements->getElementUriForLocale($element->id, $locale);
+
+		if ($uri !== null)
+		{
+			// Get the current siteUrl
+			$siteUrl = craft()->getSiteUrl();
+
+			// Get the siteUrl value for the locale
+			$localeSiteUrl = craft()->config->getLocalized('siteUrl', $locale);
+
+			// Temporarily set Craft to use this element's locale's site URL
+			craft()->setSiteUrl($localeSiteUrl);
+
+			// Get the URL
+			if ($uri == '__home__')
+			{
+				$url = UrlHelper::getSiteUrl();
+			}
+			else
+			{
+				$url = UrlHelper::getSiteUrl($uri);
+			}
+
+			// Restore the siteUrl value
+			craft()->setSiteUrl($siteUrl);
+
+			return $url;
+		}
 	}
 }
