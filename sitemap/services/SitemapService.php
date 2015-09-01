@@ -43,47 +43,49 @@ class SitemapService extends BaseApplicationComponent
         $settings = $this->settings;
 
         foreach ($this->sectionsWithUrls as $section) {
-            $changefreq = $settings['sections'][$section->id]['changefreq'];
-            $priority = $settings['sections'][$section->id]['priority'];
+            if (!empty($settings['sections'][$section->id])) {
+                $changefreq = $settings['sections'][$section->id]['changefreq'];
+                $priority = $settings['sections'][$section->id]['priority'];
 
-            $criteria = craft()->elements->getCriteria(ElementType::Entry);
+                $criteria = craft()->elements->getCriteria(ElementType::Entry);
 
-            $entries = $criteria->find(array(
-                'section' => $section->handle,
-            ));
+                $entries = $criteria->find(array(
+                    'section' => $section->handle,
+                ));
 
-            foreach ($entries as $entry) {
-                $url = $dom->createElement('url');
+                foreach ($entries as $entry) {
+                    $url = $dom->createElement('url');
 
-                $urlLoc = $dom->createElement('loc');
-                $urlLoc->nodeValue = $entry->getUrl();
-                $url->appendChild($urlLoc);
+                    $urlLoc = $dom->createElement('loc');
+                    $urlLoc->nodeValue = $entry->getUrl();
+                    $url->appendChild($urlLoc);
 
-                $enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
+                    $enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
 
-                foreach ($enabledLocales as $locale) {
-                    $entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
+                    foreach ($enabledLocales as $locale) {
+                        $entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
 
-                    $localeLoc = $dom->createElement('xhtml:link');
-                    $localeLoc->setAttribute('rel', 'alternate');
-                    $localeLoc->setAttribute('hreflang', $locale);
-                    $localeLoc->setAttribute('href', $entryLocaleUrl);
-                    $url->appendChild($localeLoc);
+                        $localeLoc = $dom->createElement('xhtml:link');
+                        $localeLoc->setAttribute('rel', 'alternate');
+                        $localeLoc->setAttribute('hreflang', $locale);
+                        $localeLoc->setAttribute('href', $entryLocaleUrl);
+                        $url->appendChild($localeLoc);
+                    }
+
+                    $urlModified = $dom->createElement('lastmod');
+                    $urlModified->nodeValue = $entry->postDate->w3c();
+                    $url->appendChild($urlModified);
+
+                    $urlChangeFreq = $dom->createElement('changefreq');
+                    $urlChangeFreq->nodeValue = $changefreq;
+                    $url->appendChild($urlChangeFreq);
+
+                    $urlPriority = $dom->createElement('priority');
+                    $urlPriority->nodeValue = $priority;
+                    $url->appendChild($urlPriority);
+
+                    $urlset->appendChild($url);
                 }
-
-                $urlModified = $dom->createElement('lastmod');
-                $urlModified->nodeValue = $entry->postDate->w3c();
-                $url->appendChild($urlModified);
-
-                $urlChangeFreq = $dom->createElement('changefreq');
-                $urlChangeFreq->nodeValue = $changefreq;
-                $url->appendChild($urlChangeFreq);
-
-                $urlPriority = $dom->createElement('priority');
-                $urlPriority->nodeValue = $priority;
-                $url->appendChild($urlPriority);
-
-                $urlset->appendChild($url);
             }
         }
 
@@ -121,6 +123,7 @@ class SitemapService extends BaseApplicationComponent
         $url = $element->getUrl();
         $element->locale = $oldLocale;
         $element->uri = $oldUri;
+
         return $url;
     }
 }
