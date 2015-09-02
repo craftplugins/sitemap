@@ -86,9 +86,11 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
             $url->appendChild($priority);
         }
 
-        foreach ($this->alternateUrls as $alternateUrl) {
-            $link = $alternateUrl->getDomElement($document);
-            $url->appendChild($link);
+        if ($this->hasAlternateUrls()) {
+            foreach ($this->alternateUrls as $alternateUrl) {
+                $link = $alternateUrl->getDomElement($document);
+                $url->appendChild($link);
+            }
         }
 
         return $url;
