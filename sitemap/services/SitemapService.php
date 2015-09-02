@@ -140,7 +140,7 @@ class SitemapService extends BaseApplicationComponent
 
         $categories = $criteria->find();
         foreach ($categories as $category) {
-            $this->addCategory($category, $changefreq, $priority);
+            $this->addElement($category, $changefreq, $priority);
         }
     }
 
