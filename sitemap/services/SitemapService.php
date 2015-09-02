@@ -80,7 +80,9 @@ class SitemapService extends BaseApplicationComponent
      */
     public function addUrl(Sitemap_UrlModel $url)
     {
-        $this->urls[$url->loc] = $url;
+        if ($url->validate()) {
+            $this->urls[$url->loc] = $url;
+        }
     }
 
     /**
