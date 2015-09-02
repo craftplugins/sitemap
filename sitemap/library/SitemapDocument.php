@@ -4,7 +4,7 @@ namespace Craft;
 
 use DOMDocument;
 
-class SitemapDocument
+class SitemapDocument extends BaseApplicationComponent
 {
     /**
      * DOMDocument instance.
