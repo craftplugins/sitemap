@@ -36,9 +36,9 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Renders the sitemap.
+     * Return the sitemap as a string.
      *
-     * @return string XML sitemap
+     * @return string
      */
     public function getSitemap()
     {
