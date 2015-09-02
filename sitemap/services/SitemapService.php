@@ -92,11 +92,7 @@ class SitemapService extends BaseApplicationComponent
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $url = new Sitemap_UrlModel();
-        $url->loc = $element->url;
-        $url->lastmod = $element->dateUpdated;
-        $url->changefreq = $changefreq;
-        $url->priority = $priority;
+        $url = new Sitemap_UrlModel($element->url, $element->dateUpdated, $changefreq, $priority);
 
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
         foreach ($locales as $locale) {
