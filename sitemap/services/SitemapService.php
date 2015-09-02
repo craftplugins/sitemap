@@ -42,6 +42,7 @@ class SitemapService extends BaseApplicationComponent
     {
         $settings = $this->pluginSettings;
 
+        // Loop through and add the sections checked in the plugin settings
         foreach ($this->sectionsWithUrls as $section) {
             if (!empty($settings['sections'][$section->id])) {
                 $changefreq = $settings['sections'][$section->id]['changefreq'];
@@ -50,6 +51,7 @@ class SitemapService extends BaseApplicationComponent
             }
         }
 
+        // Hook: renderSitemap
         craft()->plugins->call('renderSitemap');
 
         // Use DOMDocument to generate XML
