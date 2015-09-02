@@ -64,6 +64,8 @@ class SitemapService extends BaseApplicationComponent
 
         // Append a urlset node
         $urlset = $document->createElement('urlset');
+        $urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
         $document->appendChild($urlset);
 
         // Loop through and append Sitemap_UrlModel elements
