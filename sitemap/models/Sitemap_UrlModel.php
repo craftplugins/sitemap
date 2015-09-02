@@ -14,7 +14,7 @@ class Sitemap_UrlModel extends BaseModel
     /**
      * Add an altnative URL.
      *
-     * @param Sitemap_AlternateUrlModel $alternateUrl [description]
+     * @param Sitemap_AlternateUrlModel $alternateUrl
      */
     public function addAlternateUrl(Sitemap_AlternateUrlModel $alternateUrl)
     {
