@@ -96,7 +96,7 @@ class SitemapDocument
                 throw new Exception(Craft::t('Invalid priority value: {priority}', array('priority' => $priority)));
             }
 
-            $urlPriority = $this->document->createElement('priority', $priority);
+            $urlPriority = $this->document->createElement('priority', number_format($priority, 1));
             $urlElement->appendChild($urlPriority);
         }
 
