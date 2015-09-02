@@ -48,17 +48,29 @@ class SitemapService extends BaseApplicationComponent
             if (!empty($settings['sections'][$section->id])) {
                 $changefreq = $settings['sections'][$section->id]['changefreq'];
                 $priority = $settings['sections'][$section->id]['priority'];
-
-                $criteria = craft()->elements->getCriteria(ElementType::Entry);
-                $criteria->section = $section;
-
-                foreach ($criteria->find() as $entry) {
-                    $this->addElementToSitemap($entry, $changefreq, $priority);
-                }
+                $this->addSectionToSitemap($section, $changefreq, $priority);
             }
         }
 
         return $this->document->getXml();
+    }
+
+    /**
+     * Adds all elements in a section to the sitemap.
+     *
+     * @param SectionModel $section
+     * @param string       $changefreq
+     * @param string       $priority
+     */
+    public function addSectionToSitemap(SectionModel $section, $changefreq = null, $priority = null)
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = $section;
+
+        $elements = $criteria->find();
+        foreach ($elements as $element) {
+            $this->addElementToSitemap($element, $changefreq, $priority);
+        }
     }
 
     /**
