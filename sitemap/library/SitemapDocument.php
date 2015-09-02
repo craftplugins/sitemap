@@ -40,6 +40,31 @@ class SitemapDocument
     }
 
     /**
+     * Adds the element to the sitemap.
+     *
+     * @param BaseElementModel $element
+     * @param string           $changefreq
+     * @param string           $priority
+     */
+    public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
+    {
+        $urlElement = $this->addUrl($element->url, $changefreq, $priority);
+
+        $locales = craft()->elements->getEnabledLocalesForElement($element->id);
+        foreach ($locales as $locale) {
+            $localeUrl = craft()->sitemap->getElementUrlForLocale($element, $locale);
+
+            $localeElement = $this->document->createElement('xhtml:link');
+            $localeElement->setAttribute('rel', 'alternate');
+            $localeElement->setAttribute('hreflang', $locale);
+            $localeElement->setAttribute('href', $localeUrl);
+            $urlElement->appendChild($localeElement);
+        }
+
+        return $urlElement;
+    }
+
+    /**
      * Adds the URL to the sitemap.
      *
      * @param string $url
@@ -64,31 +89,6 @@ class SitemapDocument
         }
 
         $this->urlsetElement->appendChild($urlElement);
-
-        return $urlElement;
-    }
-
-    /**
-     * Adds the element to the sitemap.
-     *
-     * @param BaseElementModel $element
-     * @param string           $changefreq
-     * @param string           $priority
-     */
-    public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
-    {
-        $urlElement = $this->addUrl($element->url, $changefreq, $priority);
-
-        $locales = craft()->elements->getEnabledLocalesForElement($element->id);
-        foreach ($locales as $locale) {
-            $localeUrl = craft()->sitemap->getElementUrlForLocale($element, $locale);
-
-            $localeElement = $this->document->createElement('xhtml:link');
-            $localeElement->setAttribute('rel', 'alternate');
-            $localeElement->setAttribute('hreflang', $locale);
-            $localeElement->setAttribute('href', $localeUrl);
-            $urlElement->appendChild($localeElement);
-        }
 
         return $urlElement;
     }
