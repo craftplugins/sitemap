@@ -86,6 +86,18 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
+     * Adds a URL to the sitemap.
+     *
+     * @param string $url
+     * @param string $changefreq
+     * @param string $priority
+     */
+    public function addUrlToSitemap($url, $changefreq = null, $priority = null)
+    {
+        $this->document->addUrl($url, $changefreq, $priority);
+    }
+
+    /**
      * Returns the localized URL for an element.
      *
      * @param Element $element
