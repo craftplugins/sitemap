@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-class Sitemap_UrlModel extends BaseModel
+class Sitemap_UrlModel extends Sitemap_BaseModel
 {
     /**
      * Array of Sitemap_AlternateUrlModel instances.
