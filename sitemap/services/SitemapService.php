@@ -97,22 +97,6 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Gets the plugin settings.
-     *
-     * @return array
-     */
-    protected function getPluginSettings()
-    {
-        $plugin = craft()->plugins->getPlugin('sitemap');
-
-        if (is_null($plugin)) {
-            return array();
-        }
-
-        return $plugin->settings;
-    }
-
-    /**
      * A modified copy of BaseElementModel::getUrl.
      *
      * @param Element $element
@@ -131,5 +115,21 @@ class SitemapService extends BaseApplicationComponent
         $element->uri = $oldUri;
 
         return $url;
+    }
+
+    /**
+     * Gets the plugin settings.
+     *
+     * @return array
+     */
+    protected function getPluginSettings()
+    {
+        $plugin = craft()->plugins->getPlugin('sitemap');
+
+        if (is_null($plugin)) {
+            return array();
+        }
+
+        return $plugin->settings;
     }
 }
