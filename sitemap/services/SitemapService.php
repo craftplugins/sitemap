@@ -147,8 +147,8 @@ class SitemapService extends BaseApplicationComponent
     /**
      * Gets a element URL for the specified locale.
      *
-     * @param Element        $element
-     * @param string|Locale  $locale
+     * @param Element            $element
+     * @param string|LocaleModel $locale
      *
      * @return string
      */
