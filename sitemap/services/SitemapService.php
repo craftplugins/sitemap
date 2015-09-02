@@ -120,7 +120,7 @@ class SitemapService extends BaseApplicationComponent
      *
      * @return string
      */
-    protected function getElementUrlForLocale($element, $locale)
+    public function getElementUrlForLocale(BaseElementModel $element, $locale)
     {
         $oldLocale = $element->locale;
         $oldUri = $element->uri;
