@@ -2,10 +2,27 @@
 
 namespace Craft;
 
-use \DOMDocument;
-
 class SitemapService extends BaseApplicationComponent
 {
+    /**
+     * SitemapDocument instance.
+     *
+     * @var SitemapDocument
+     */
+    protected $document;
+
+    /**
+     * {@inheritdoc} CApplicationComponent::init()
+     */
+    public function init()
+    {
+        Craft::import('plugins.sitemap.library.*');
+
+        $this->document = new SitemapDocument();
+
+        parent::init();
+    }
+
     /**
      * Returns all Craft sections that have URLs.
      *
@@ -13,7 +30,7 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSectionsWithUrls()
     {
-        return array_filter(craft()->sections->allSections, function($section) {
+        return array_filter(craft()->sections->allSections, function ($section) {
             return $section->isHomepage() || $section->urlFormat;
         });
     }
@@ -25,20 +42,6 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSitemap()
     {
-        $dom = new DOMDocument('1.0', 'utf-8');
-
-        // Format XML output when devMode is active for easier debugging
-        if (craft()->config->get('devMode')) {
-            $dom->formatOutput = true;
-        }
-
-        $urlset = $dom->createElement('urlset');
-        $urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
-
-        $dom->appendChild($urlset);
-
-        // Get settings
         $settings = $this->pluginSettings;
 
         foreach ($this->sectionsWithUrls as $section) {
@@ -47,52 +50,23 @@ class SitemapService extends BaseApplicationComponent
                 $priority = $settings['sections'][$section->id]['priority'];
 
                 $criteria = craft()->elements->getCriteria(ElementType::Entry);
+                $criteria->section = $section;
 
-                $entries = $criteria->find(array(
-                    'section' => $section->handle,
-                ));
-
-                foreach ($entries as $entry) {
-                    $url = $dom->createElement('url');
-
-                    $urlLoc = $dom->createElement('loc');
-                    $urlLoc->nodeValue = $entry->getUrl();
-                    $url->appendChild($urlLoc);
-
-                    $enabledLocales = craft()->elements->getEnabledLocalesForElement($entry->id);
-
-                    foreach ($enabledLocales as $locale) {
-                        $entryLocaleUrl = $this->getElementUrlForLocale($entry, $locale);
-
-                        $localeLoc = $dom->createElement('xhtml:link');
-                        $localeLoc->setAttribute('rel', 'alternate');
-                        $localeLoc->setAttribute('hreflang', $locale);
-                        $localeLoc->setAttribute('href', $entryLocaleUrl);
-                        $url->appendChild($localeLoc);
-                    }
-
-                    $urlModified = $dom->createElement('lastmod');
-                    $urlModified->nodeValue = $entry->postDate->w3c();
-                    $url->appendChild($urlModified);
-
-                    $urlChangeFreq = $dom->createElement('changefreq');
-                    $urlChangeFreq->nodeValue = $changefreq;
-                    $url->appendChild($urlChangeFreq);
-
-                    $urlPriority = $dom->createElement('priority');
-                    $urlPriority->nodeValue = $priority;
-                    $url->appendChild($urlPriority);
-
-                    $urlset->appendChild($url);
+                foreach ($criteria->find() as $entry) {
+                    $this->document->addElement($entry, $changefreq, $priority);
                 }
             }
         }
 
-        return $dom->saveXML();
+        return $this->document->getXml();
+    }
+
+    public function addElementToSitemap(BaseElementModel $element, $changefreq = null, $priority = null)
+    {
     }
 
     /**
-     * A modified copy of BaseElementModel::getUrl.
+     * Returns the localized URL for an element.
      *
      * @param Element $element
      * @param Locale  $locale
