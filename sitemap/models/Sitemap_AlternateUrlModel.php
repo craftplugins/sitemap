@@ -7,7 +7,7 @@ class Sitemap_AlternateUrlModel extends Sitemap_BaseModel
     /**
      * Constructor
      * @param string|LocaleModel $hreflang
-     * @param string|urlModel    $href
+     * @param string             $href
      */
     public function __construct($hreflang = null, $href = null)
     {
