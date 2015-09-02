@@ -174,6 +174,8 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getElementUrlForLocale(BaseElementModel $element, $locale)
     {
+        $this->validateLocale($locale);
+
         $oldLocale = $element->locale;
         $oldUri = $element->uri;
         $element->locale = $locale;
@@ -195,6 +197,8 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getUrlForLocale($path, $locale)
     {
+        $this->validateLocale($locale);
+
         // Get the site URL for the current locale
         $siteUrl = craft()->siteUrl;
 
@@ -216,6 +220,18 @@ class SitemapService extends BaseApplicationComponent
         $path = trim($path, '/');
 
         return UrlHelper::getUrl($localizedSiteUrl.'/'.$path);
+    }
+
+    /**
+     * Ensures that the requested locale is valid.
+     *
+     * @param string|LocaleModel $locale
+     */
+    protected function validateLocale($locale)
+    {
+        if (!in_array($locale, craft()->i18n->siteLocales)) {
+            throw new Exception(Craft::t('“{locale}” is not a valid site locale.', array('locale' => $locale)));
+        }
     }
 
     /**
