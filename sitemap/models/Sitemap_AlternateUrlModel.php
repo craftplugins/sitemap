@@ -5,7 +5,8 @@ namespace Craft;
 class Sitemap_AlternateUrlModel extends Sitemap_BaseModel
 {
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string|LocaleModel $hreflang
      * @param string             $href
      */
