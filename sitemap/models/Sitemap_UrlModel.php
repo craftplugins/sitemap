@@ -48,6 +48,18 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
+     * Returns true if there’s one or more alternate URLs, excluding the current locale.
+     *
+     * @return bool
+     */
+    public function hasAlternateUrls()
+    {
+        return count(array_filter($this->alternateUrls, function ($alternateUrl) {
+            return $alternateUrl->hreflang != craft()->language;
+        })) > 0;
+    }
+
+    /**
      * Generates the relevant DOMElement instances.
      *
      * @param \DOMDocument $document
