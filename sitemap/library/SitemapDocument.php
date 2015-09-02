@@ -14,11 +14,11 @@ class SitemapDocument
     protected $document;
 
     /**
-     * The urlset node.
+     * The urlset element.
      *
      * @var DOMElement
      */
-    protected $urlset;
+    protected $urlsetElement;
 
     /**
      * Constructor.
@@ -32,15 +32,44 @@ class SitemapDocument
             $this->document->formatOutput = true;
         }
 
-        $this->urlset = $this->document->createElement('urlset');
-        $this->urlset->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-        $this->urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
+        $this->urlsetElement = $this->document->createElement('urlset');
+        $this->urlsetElement->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $this->urlsetElement->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
 
-        $this->document->appendChild($this->urlset);
+        $this->document->appendChild($this->urlsetElement);
     }
 
     /**
-     * Adds the relevant nodes for the element.
+     * Adds the URL to the sitemap.
+     *
+     * @param string $url
+     * @param string $changefreq http://www.sitemaps.org/protocol.html#changefreqdef
+     * @param string $priority   http://www.sitemaps.org/protocol.html#prioritydef
+     */
+    public function addUrl($url, $changefreq = null, $priority = null)
+    {
+        $urlElement = $this->document->createElement('url');
+
+        $locElement = $this->document->createElement('loc', $url);
+        $urlElement->appendChild($locElement);
+
+        if ($changefreq) {
+            $urlChangeFreq = $this->document->createElement('changefreq', $changefreq);
+            $urlElement->appendChild($urlChangeFreq);
+        }
+
+        if ($priority) {
+            $urlPriority = $this->document->createElement('priority', $priority);
+            $urlElement->appendChild($urlPriority);
+        }
+
+        $this->urlsetElement->appendChild($urlElement);
+
+        return $urlElement;
+    }
+
+    /**
+     * Adds the element to the sitemap.
      *
      * @param BaseElementModel $element
      * @param string           $changefreq http://www.sitemaps.org/protocol.html#changefreqdef
@@ -48,40 +77,20 @@ class SitemapDocument
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $url = $this->document->createElement('url');
-
-        $urlLoc = $this->document->createElement('loc');
-        $urlLoc->nodeValue = $element->getUrl();
-        $url->appendChild($urlLoc);
+        $urlElement = $this->addUrl($element->url, $changefreq, $priority);
 
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
         foreach ($locales as $locale) {
-            $elementLocaleUrl = craft()->sitemap->getElementUrlForLocale($element, $locale);
+            $localeUrl = craft()->sitemap->getElementUrlForLocale($element, $locale);
 
-            $localeLoc = $this->document->createElement('xhtml:link');
-            $localeLoc->setAttribute('rel', 'alternate');
-            $localeLoc->setAttribute('hreflang', $locale);
-            $localeLoc->setAttribute('href', $elementLocaleUrl);
-            $url->appendChild($localeLoc);
+            $localeElement = $this->document->createElement('xhtml:link');
+            $localeElement->setAttribute('rel', 'alternate');
+            $localeElement->setAttribute('hreflang', $locale);
+            $localeElement->setAttribute('href', $localeUrl);
+            $urlElement->appendChild($localeElement);
         }
 
-        $urlModified = $this->document->createElement('lastmod');
-        $urlModified->nodeValue = $element->dateUpdated->w3c();
-        $url->appendChild($urlModified);
-
-        if ($changefreq) {
-            $urlChangeFreq = $this->document->createElement('changefreq');
-            $urlChangeFreq->nodeValue = $changefreq;
-            $url->appendChild($urlChangeFreq);
-        }
-
-        if ($priority) {
-            $urlPriority = $this->document->createElement('priority');
-            $urlPriority->nodeValue = $priority;
-            $url->appendChild($urlPriority);
-        }
-
-        $this->urlset->appendChild($url);
+        return $urlElement;
     }
 
     /**
