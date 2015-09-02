@@ -5,9 +5,16 @@ namespace Craft;
 class Sitemap_UrlModel extends Sitemap_BaseModel
 {
     /**
+     * Array of Sitemap_AlternateUrlModel instances.
+     *
+     * @var array
+     */
+    protected $alternateUrls = array();
+
+    /**
      * Constructor.
      *
-     * @param string|Locale      $loc
+     * @param string|urlModel    $loc
      * @param \DateTimeInterface $lastmod
      * @param string             $changefreq
      * @param string             $priority
@@ -19,13 +26,6 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
         $this->changefreq = $changefreq;
         $this->priority = $priority;
     }
-
-    /**
-     * Array of Sitemap_AlternateUrlModel instances.
-     *
-     * @var array
-     */
-    protected $alternateUrls = array();
 
     /**
      * Add an altnative URL.
