@@ -4,6 +4,9 @@ namespace Craft;
 
 class Sitemap_AlternateUrlModel extends BaseModel
 {
+    /**
+     * {@inheritdoc} Sitemap_UrlModel::getDomElement()
+     */
     public function getDomElement(\DOMDocument $document)
     {
         $element = $document->createElement('xhtml:link');
@@ -14,6 +17,9 @@ class Sitemap_AlternateUrlModel extends BaseModel
         return $element;
     }
 
+    /**
+     * {@inheritdoc} BaseModel::defineAttributes()
+     */
     protected function defineAttributes()
     {
         return array(

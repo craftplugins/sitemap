@@ -4,18 +4,38 @@ namespace Craft;
 
 class Sitemap_UrlModel extends BaseModel
 {
+    /**
+     * Array of Sitemap_AlternateUrlModel instances.
+     *
+     * @var array
+     */
     protected $alternateUrls = array();
 
+    /**
+     * Add an altnative URL.
+     *
+     * @param Sitemap_AlternateUrlModel $alternateUrl [description]
+     */
     public function addAlternateUrl(Sitemap_AlternateUrlModel $alternateUrl)
     {
         $this->alternateUrls[] = $alternateUrl;
     }
 
+    /**
+     * @return array Array of assigned Sitemap_AlternateUrlModel instances
+     */
     public function getAlternateUrls()
     {
         return $this->alternateUrls;
     }
 
+    /**
+     * Generates the relevant DOMElement instances.
+     *
+     * @param \DOMDocument $document
+     *
+     * @return \DOMElement
+     */
     public function getDomElement(\DOMDocument $document)
     {
         $url = $document->createElement('url');
@@ -44,6 +64,9 @@ class Sitemap_UrlModel extends BaseModel
         return $url;
     }
 
+    /**
+     * {@inheritdoc} BaseModel::defineAttributes()
+     */
     protected function defineAttributes()
     {
         return array(
