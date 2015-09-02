@@ -24,7 +24,7 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Returns all Craft sections that have URLs.
+     * Returns all sections that have URLs.
      *
      * @return array An array of Section instances
      */
