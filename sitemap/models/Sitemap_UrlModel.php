@@ -38,7 +38,9 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
-     * @return array Array of assigned Sitemap_AlternateUrlModel instances
+     * Returns an array of assigned Sitemap_AlternateUrlModel instances.
+     *
+     * @return array
      */
     public function getAlternateUrls()
     {
