@@ -5,6 +5,22 @@ namespace Craft;
 class Sitemap_UrlModel extends Sitemap_BaseModel
 {
     /**
+     * Constructor.
+     *
+     * @param string|Locale      $loc
+     * @param \DateTimeInterface $lastmod
+     * @param string             $changefreq
+     * @param string             $priority
+     */
+    public function __construct($loc, \DateTimeInterface $lastmod, $changefreq = null, $priority = null)
+    {
+        $this->loc = $loc;
+        $this->lastmod = $lastmod;
+        $this->changefreq = $changefreq;
+        $this->priority = $priority;
+    }
+
+    /**
      * Array of Sitemap_AlternateUrlModel instances.
      *
      * @var array
