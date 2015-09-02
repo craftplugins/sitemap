@@ -23,7 +23,7 @@ class Sitemap_AlternateUrlModel extends Sitemap_BaseModel
     protected function defineAttributes()
     {
         return array(
-            'hreflang' => AttributeType::String,
+            'hreflang' => AttributeType::Locale,
             'href' => AttributeType::Url,
         );
     }
