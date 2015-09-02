@@ -13,16 +13,9 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSectionsWithUrls()
     {
-        $enabledSections = $this->pluginSettings['sections'];
-        $sections = array();
-
-        foreach (craft()->sections->allSections as $section) {
-            if ($section->isHomepage() || $section->urlFormat) {
-                $sections[] = $section;
-            }
-        }
-
-        return $sections;
+        return array_filter(craft()->sections->allSections, function($section) {
+            return $section->isHomepage() || $section->urlFormat;
+        });
     }
 
     /**
