@@ -53,7 +53,7 @@ class SitemapService extends BaseApplicationComponent
                 $criteria->section = $section;
 
                 foreach ($criteria->find() as $entry) {
-                    $this->document->addElement($entry, $changefreq, $priority);
+                    $this->addElementToSitemap($entry, $changefreq, $priority);
                 }
             }
         }
@@ -61,8 +61,16 @@ class SitemapService extends BaseApplicationComponent
         return $this->document->getXml();
     }
 
+    /**
+     * Adds an element to the sitemap.
+     *
+     * @param BaseElementModel $element
+     * @param string           $changefreq
+     * @param string           $priority
+     */
     public function addElementToSitemap(BaseElementModel $element, $changefreq = null, $priority = null)
     {
+        $this->document->addElement($element, $changefreq, $priority);
     }
 
     /**

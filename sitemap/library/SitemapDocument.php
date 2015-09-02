@@ -43,8 +43,8 @@ class SitemapDocument
      * Adds the URL to the sitemap.
      *
      * @param string $url
-     * @param string $changefreq http://www.sitemaps.org/protocol.html#changefreqdef
-     * @param string $priority   http://www.sitemaps.org/protocol.html#prioritydef
+     * @param string $changefreq
+     * @param string $priority
      */
     public function addUrl($url, $changefreq = null, $priority = null)
     {
@@ -72,8 +72,8 @@ class SitemapDocument
      * Adds the element to the sitemap.
      *
      * @param BaseElementModel $element
-     * @param string           $changefreq http://www.sitemaps.org/protocol.html#changefreqdef
-     * @param string           $priority   http://www.sitemaps.org/protocol.html#prioritydef
+     * @param string           $changefreq
+     * @param string           $priority
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
