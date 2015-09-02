@@ -111,7 +111,7 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Adds all entries related to the section to the sitemap.
+     * Adds all entries in the section to the sitemap.
      *
      * @param SectionModel $section
      * @param string       $changefreq
@@ -127,7 +127,7 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Adds all entries related to the group to the sitemap.
+     * Adds all categories in the group to the sitemap.
      *
      * @param CategoryGroupModel $categoryGroup
      * @param string             $changefreq
