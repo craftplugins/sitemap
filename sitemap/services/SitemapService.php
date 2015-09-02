@@ -2,6 +2,8 @@
 
 namespace Craft;
 
+use \DOMDocument;
+
 class SitemapService extends BaseApplicationComponent
 {
     /**
@@ -30,7 +32,7 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSitemap()
     {
-        $dom = new \DOMDocument('1.0', 'utf-8');
+        $dom = new DOMDocument('1.0', 'utf-8');
 
         // Format XML output when devMode is active for easier debugging
         if (craft()->config->get('devMode')) {
