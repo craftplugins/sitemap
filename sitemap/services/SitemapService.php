@@ -58,7 +58,7 @@ class SitemapService extends BaseApplicationComponent
             }
         }
 
-        return $this->document->xml;
+        return $this->document->getXml();
     }
 
     public function addElementToSitemap(BaseElementModel $element, $changefreq = null, $priority = null)
