@@ -59,7 +59,7 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
         $loc = $document->createElement('loc', $this->loc);
         $url->appendChild($loc);
 
-        $lastmod = $document->createElement('loc', $this->lastmod->w3c());
+        $lastmod = $document->createElement('lastmod', $this->lastmod->w3c());
         $url->appendChild($lastmod);
 
         if ($this->changefreq) {
