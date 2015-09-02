@@ -97,6 +97,19 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
+     * {@inheritdoc} BaseModel::setAttribute
+     */
+    public function setAttribute($name, $value)
+    {
+        if ($name == 'loc') {
+            $alternateUrl = new Sitemap_AlternateUrlModel(craft()->language, $value);
+            $this->addAlternateUrl($alternateUrl);
+        }
+
+        parent::setAttribute($name, $value);
+    }
+
+    /**
      * {@inheritdoc} BaseModel::defineAttributes()
      */
     protected function defineAttributes()
