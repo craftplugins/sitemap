@@ -34,7 +34,7 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
      */
     public function addAlternateUrl(Sitemap_AlternateUrlModel $alternateUrl)
     {
-        $this->alternateUrls[] = $alternateUrl;
+        $this->alternateUrls[$alternateUrl->hreflang] = $alternateUrl;
     }
 
     /**
