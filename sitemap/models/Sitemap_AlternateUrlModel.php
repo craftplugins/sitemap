@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-class Sitemap_AlternateUrlModel extends BaseModel
+class Sitemap_AlternateUrlModel extends Sitemap_BaseModel
 {
     /**
      * {@inheritdoc} Sitemap_UrlModel::getDomElement()
