@@ -188,19 +188,34 @@ class SitemapService extends BaseApplicationComponent
     /**
      * Gets a URL for the specified locale.
      *
-     * @param string $url
-     * @param string $locale
+     * @param string             $path
+     * @param string|LocaleModel $locale
      *
      * @return string
      */
-    public function getUrlForLocale($url, $locale)
+    public function getUrlForLocale($path, $locale)
     {
-        $oldLanguage = craft()->language;
-        craft()->setLanguage($locale);
-        $url = UrlHelper::getSiteUrl($url);
-        craft()->setLanguage($oldLanguage);
+        // Get the site URL for the current locale
+        $siteUrl = craft()->siteUrl;
 
-        return $url;
+        if (UrlHelper::isFullUrl($path)) {
+            // Return $path if it’s a remote URL
+            if (!stripos($path, $siteUrl)) {
+                return $path;
+            }
+
+            // Remove the current locale siteUrl
+            $path = str_replace($siteUrl, '', $path);
+        }
+
+        // Get the site URL for the specified locale
+        $localizedSiteUrl = craft()->config->getLocalized('siteUrl', $locale);
+
+        // Trim slahes
+        $localizedSiteUrl = rtrim($localizedSiteUrl, '/');
+        $path = trim($path, '/');
+
+        return UrlHelper::getUrl($localizedSiteUrl.'/'.$path);
     }
 
     /**
