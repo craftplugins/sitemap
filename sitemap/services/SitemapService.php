@@ -127,24 +127,6 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Adds all entries related to the category to the sitemap.
-     *
-     * @param CategoryModel $category
-     * @param string        $changefreq
-     * @param string        $priority
-     */
-    public function addCategory(CategoryModel $category, $changefreq = null, $priority = null)
-    {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->category = $category;
-
-        $entries = $criteria->find();
-        foreach ($entries as $entry) {
-            $this->addElement($entry, $changefreq, $priority);
-        }
-    }
-
-    /**
      * Adds all entries related to the group to the sitemap.
      *
      * @param CategoryGroupModel $categoryGroup
