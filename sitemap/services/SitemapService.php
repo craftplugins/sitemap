@@ -11,7 +11,7 @@ class SitemapService extends BaseApplicationComponent
      */
     public function getSectionsWithUrls()
     {
-        $enabledSections = $this->settings['sections'];
+        $enabledSections = $this->pluginSettings['sections'];
         $sections = array();
 
         foreach (craft()->sections->allSections as $section) {
@@ -44,7 +44,7 @@ class SitemapService extends BaseApplicationComponent
         $dom->appendChild($urlset);
 
         // Get settings
-        $settings = $this->settings;
+        $settings = $this->pluginSettings;
 
         foreach ($this->sectionsWithUrls as $section) {
             if (!empty($settings['sections'][$section->id])) {
@@ -101,7 +101,7 @@ class SitemapService extends BaseApplicationComponent
      *
      * @return array
      */
-    protected function getSettings()
+    protected function getPluginSettings()
     {
         $plugin = craft()->plugins->getPlugin('sitemap');
 
