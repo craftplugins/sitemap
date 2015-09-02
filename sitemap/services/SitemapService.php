@@ -5,11 +5,11 @@ namespace Craft;
 class SitemapService extends BaseApplicationComponent
 {
     /**
-     * SitemapDocument instance.
+     * Array of Sitemap_UrlModel instances.
      *
-     * @var SitemapDocument
+     * @var array
      */
-    protected $document;
+    protected $urls = array();
 
     /**
      * {@inheritdoc} CApplicationComponent::init()
@@ -17,8 +17,6 @@ class SitemapService extends BaseApplicationComponent
     public function init()
     {
         Craft::import('plugins.sitemap.library.*');
-
-        $this->document = new SitemapDocument();
 
         parent::init();
     }
@@ -48,29 +46,39 @@ class SitemapService extends BaseApplicationComponent
             if (!empty($settings['sections'][$section->id])) {
                 $changefreq = $settings['sections'][$section->id]['changefreq'];
                 $priority = $settings['sections'][$section->id]['priority'];
-                $this->addSectionToSitemap($section, $changefreq, $priority);
+                $this->addSection($section, $changefreq, $priority);
             }
         }
 
-        return $this->document->getXml();
+        craft()->plugins->call('renderSitemap');
+
+        // Use DOMDocument to generate XML
+        $document = new \DOMDocument('1.0', 'utf-8');
+
+        // Format XML output when devMode is active for easier debugging
+        if (craft()->config->get('devMode')) {
+            $document->formatOutput = true;
+        }
+
+        // Append a urlset node
+        $urlset = $document->createElement('urlset');
+        $document->appendChild($urlset);
+
+        // Loop through and append Sitemap_UrlModel elements
+        foreach ($this->urls as $url) {
+            $urlElement = $url->getDomElement($document);
+            $urlset->appendChild($urlElement);
+        }
+
+        return $document->saveXML();
     }
 
     /**
-     * Adds all elements in a section to the sitemap.
-     *
-     * @param SectionModel $section
-     * @param string       $changefreq
-     * @param string       $priority
+     * Adds a URL to the sitemap.
      */
-    public function addSectionToSitemap(SectionModel $section, $changefreq = null, $priority = null)
+    public function addUrl(Sitemap_UrlModel $url)
     {
-        $criteria = craft()->elements->getCriteria(ElementType::Entry);
-        $criteria->section = $section;
-
-        $elements = $criteria->find();
-        foreach ($elements as $element) {
-            $this->addElementToSitemap($element, $changefreq, $priority);
-        }
+        $this->urls[$url->loc] = $url;
     }
 
     /**
@@ -80,25 +88,82 @@ class SitemapService extends BaseApplicationComponent
      * @param string           $changefreq
      * @param string           $priority
      */
-    public function addElementToSitemap(BaseElementModel $element, $changefreq = null, $priority = null)
+    public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $this->document->addElement($element, $changefreq, $priority);
+        $url = new Sitemap_UrlModel();
+        $url->loc = $element->url;
+        $url->lastmod = $element->dateUpdated;
+        $url->changefreq = $changefreq;
+        $url->priority = $priority;
+
+        $locales = craft()->elements->getEnabledLocalesForElement($element->id);
+        foreach ($locales as $locale) {
+            $alternateUrl = new Sitemap_AlternateUrlModel();
+            $alternateUrl->hreflang = $locale;
+            $alternateUrl->href = craft()->sitemap->getElementUrlForLocale($element, $locale);
+
+            $url->addAlternateUrl($alternateUrl);
+        }
+
+        $this->addUrl($url);
     }
 
     /**
-     * Adds a URL to the sitemap.
+     * Adds all entries related to the section to the sitemap.
      *
-     * @param string $url
-     * @param string $changefreq
-     * @param string $priority
+     * @param SectionModel $section
+     * @param string       $changefreq
+     * @param string       $priority
      */
-    public function addUrlToSitemap($url, $changefreq = null, $priority = null)
+    public function addSection(SectionModel $section, $changefreq = null, $priority = null)
     {
-        $this->document->addUrl($url, $changefreq, $priority);
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->section = $section;
+
+        $entries = $criteria->find();
+        foreach ($entries as $entry) {
+            $this->addElement($entry, $changefreq, $priority);
+        }
     }
 
     /**
-     * Returns the localized URL for an element.
+     * Adds all entries related to the category to the sitemap.
+     *
+     * @param CategoryModel $category
+     * @param string        $changefreq
+     * @param string        $priority
+     */
+    public function addCategory(CategoryModel $category, $changefreq = null, $priority = null)
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Entry);
+        $criteria->category = $category;
+
+        $entries = $criteria->find();
+        foreach ($entries as $entry) {
+            $this->addElement($entry, $changefreq, $priority);
+        }
+    }
+
+    /**
+     * Adds all categories related to the group to the sitemap.
+     *
+     * @param CategoryGroupModel $categoryGroup
+     * @param string             $changefreq
+     * @param string             $priority
+     */
+    public function addCategoryGroup(CategoryGroupModel $categoryGroup, $changefreq = null, $priority = null)
+    {
+        $criteria = craft()->elements->getCriteria(ElementType::Category);
+        $criteria->group = $categoryGroup;
+
+        $categories = $criteria->find();
+        foreach ($categories as $category) {
+            $this->addCategory($category, $changefreq, $priority);
+        }
+    }
+
+    /**
+     * Gets a element URL for the specified locale.
      *
      * @param Element $element
      * @param Locale  $locale
@@ -114,6 +179,24 @@ class SitemapService extends BaseApplicationComponent
         $url = $element->getUrl();
         $element->locale = $oldLocale;
         $element->uri = $oldUri;
+
+        return $url;
+    }
+
+    /**
+     * Gets a URL for the specified locale.
+     *
+     * @param string $url
+     * @param string $locale
+     *
+     * @return string
+     */
+    public function getUrlForLocale($url, $locale)
+    {
+        $oldLanguage = craft()->language;
+        craft()->setLanguage($locale);
+        $url = UrlHelper::getSiteUrl($url);
+        craft()->setLanguage($oldLanguage);
 
         return $url;
     }
