@@ -79,11 +79,23 @@ class SitemapDocument
         $urlElement->appendChild($locElement);
 
         if ($changefreq) {
+            // Check value is valid
+            if (!SitemapChangeFrequency::isValidValue($changefreq))
+            {
+                throw new Exception(Craft::t('Invalid changefreq value: {changefreq}', array('changefreq' => $changefreq)));
+            }
+
             $urlChangeFreq = $this->document->createElement('changefreq', $changefreq);
             $urlElement->appendChild($urlChangeFreq);
         }
 
         if ($priority) {
+            // Check value is valid
+            if (!SitemapPriority::isValidValue($priority))
+            {
+                throw new Exception(Craft::t('Invalid priority value: {priority}', array('priority' => $priority)));
+            }
+
             $urlPriority = $this->document->createElement('priority', $priority);
             $urlElement->appendChild($urlPriority);
         }
