@@ -121,10 +121,8 @@ class SitemapService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = $section;
-
-        $entries = $criteria->find();
-        foreach ($entries as $entry) {
-            $this->addElement($entry, $changefreq, $priority);
+        foreach ($criteria->find() as $element) {
+            $this->addElement($element, $changefreq, $priority);
         }
     }
 
@@ -147,7 +145,7 @@ class SitemapService extends BaseApplicationComponent
     }
 
     /**
-     * Adds all categories related to the group to the sitemap.
+     * Adds all entries related to the group to the sitemap.
      *
      * @param CategoryGroupModel $categoryGroup
      * @param string             $changefreq
