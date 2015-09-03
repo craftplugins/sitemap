@@ -28,13 +28,20 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
-     * Add an altnative URL.
+     * Add an alternate URL.
      *
-     * @param Sitemap_AlternateUrlModel $alternateUrl
+     * @param string|LocaleModel $hreflang
+     * @param string             $href
      */
-    public function addAlternateUrl(Sitemap_AlternateUrlModel $alternateUrl)
+    public function addAlternateUrl($hreflang, $href)
     {
-        $this->alternateUrls[$alternateUrl->hreflang] = $alternateUrl;
+        $alternateUrl = new Sitemap_AlternateUrlModel($hreflang, $href);
+
+        if ($alternateUrl->validate()) {
+            $this->alternateUrls[$alternateUrl->hreflang] = $alternateUrl;
+        }
+
+        return $alternateUrl;
     }
 
     /**
@@ -102,8 +109,7 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     public function setAttribute($name, $value)
     {
         if ($name == 'loc') {
-            $alternateUrl = new Sitemap_AlternateUrlModel(craft()->language, $value);
-            $this->addAlternateUrl($alternateUrl);
+            $this->addAlternateUrl(craft()->language, $value);
         }
 
         if ($name == 'lastmod') {

@@ -80,11 +80,24 @@ class SitemapService extends BaseApplicationComponent
     /**
      * Adds a URL to the sitemap.
      */
-    public function addUrl(Sitemap_UrlModel $url)
+
+    /**
+     * Adds a URL to the sitemap.
+     *
+     * @param string   $loc
+     * @param DateTime $lastmod
+     * @param string   $changefreq
+     * @param string   $priority
+     */
+    public function addUrl($loc, $lastmod, $changefreq = null, $priority = null)
     {
+        $url = new Sitemap_UrlModel($loc, $lastmod, $changefreq, $priority);
+
         if ($url->validate()) {
             $this->urls[$url->loc] = $url;
         }
+
+        return $url;
     }
 
     /**
@@ -96,18 +109,13 @@ class SitemapService extends BaseApplicationComponent
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $url = new Sitemap_UrlModel($element->url, $element->dateUpdated, $changefreq, $priority);
+        $url = $this->addUrl($element->url, $element->dateUpdated, $changefreq, $priority);
 
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
         foreach ($locales as $locale) {
-            $alternateUrl = new Sitemap_AlternateUrlModel();
-            $alternateUrl->hreflang = $locale;
-            $alternateUrl->href = craft()->sitemap->getElementUrlForLocale($element, $locale);
-
-            $url->addAlternateUrl($alternateUrl);
+            $href = craft()->sitemap->getElementUrlForLocale($element, $locale);
+            $url->addAlternateUrl($locale, $href);
         }
-
-        $this->addUrl($url);
     }
 
     /**
