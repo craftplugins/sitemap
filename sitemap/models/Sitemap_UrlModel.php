@@ -132,8 +132,8 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
         return array(
             'loc' => AttributeType::Url,
             'lastmod' => AttributeType::DateTime,
-            'changefreq' => array(AttributeType::Enum, 'values' => SitemapChangeFrequency::getConstants()),
-            'priority' => array(AttributeType::Enum, 'values' => SitemapPriority::getConstants()),
+            'changefreq' => array(AttributeType::Enum, 'values' => Sitemap_ChangeFrequency::getConstants()),
+            'priority' => array(AttributeType::Enum, 'values' => Sitemap_Priority::getConstants()),
         );
     }
 }

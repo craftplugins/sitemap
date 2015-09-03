@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-abstract class SitemapPriority extends BaseEnum
+abstract class Sitemap_Priority extends BaseEnum
 {
     /**
      * Formats a number into a valid priority value.

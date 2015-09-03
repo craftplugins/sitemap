@@ -2,7 +2,7 @@
 
 namespace Craft;
 
-abstract class SitemapChangeFrequency extends BaseEnum
+abstract class Sitemap_ChangeFrequency extends BaseEnum
 {
 	const Always  = 'always';
 	const Hourly  = 'hourly';

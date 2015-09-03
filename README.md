@@ -89,7 +89,7 @@ Adds an element to the sitemap.
 
 ```php
 $element = craft()->elements->getElementById(2);
-craft()->sitemap->addElement($element, SitemapChangeFrequency::Daily, 1.0);
+craft()->sitemap->addElement($element, Sitemap_ChangeFrequency::Daily, 1.0);
 ```
 
 ##### `addSection(SectionModel $section, [$changefreq, [$priority]])`
@@ -97,7 +97,7 @@ Adds all entries in the section to the sitemap.
 
 ```php
 $section = craft()->sections->getSectionByHandle('homepage');
-craft()->sitemap->addSection($section, SitemapChangeFrequency::Weekly, 1.0);
+craft()->sitemap->addSection($section, Sitemap_ChangeFrequency::Weekly, 1.0);
 ```
 
 ##### `addCategoryGroup(CategoryGroupModel $categoryGroup, [$changefreq, [$priority]])`
@@ -132,15 +132,15 @@ echo craft()->sitemap->getUrlForLocale('foo/bar', 'fr');
 
 #### Helper Classes
 
-##### `SitemapChangeFrequency`
+##### `Sitemap_ChangeFrequency`
 Enumeration of valid `changefreq` values.
 
 ```php
-SitemapChangeFrequency::Always
-SitemapChangeFrequency::Hourly
-SitemapChangeFrequency::Daily
-SitemapChangeFrequency::Weekly
-SitemapChangeFrequency::Monthly
-SitemapChangeFrequency::Yearly
-SitemapChangeFrequency::Never
+Sitemap_ChangeFrequency::Always
+Sitemap_ChangeFrequency::Hourly
+Sitemap_ChangeFrequency::Daily
+Sitemap_ChangeFrequency::Weekly
+Sitemap_ChangeFrequency::Monthly
+Sitemap_ChangeFrequency::Yearly
+Sitemap_ChangeFrequency::Never
 ```
