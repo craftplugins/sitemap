@@ -17,7 +17,7 @@ class SitemapPlugin extends BasePlugin
      */
     public function getVersion()
     {
-        return 'v1.0.0-alpha.2';
+        return 'v1.0.0-alpha.3';
     }
 
     /**
