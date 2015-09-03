@@ -74,14 +74,13 @@ And here’s an example of the resulting element in the sitemap XML:
 
 There’s several service methods made available to add items to the sitemap.
 
-##### `addUrl(Sitemap_UrlModel $url)`
+##### `addUrl($loc, $lastmod, [$changefreq, [$priority]])`
 Adds a URL to the sitemap.
 
 ```php
 $loc = UrlHelper::getSiteUrl('special/route');
 $lastmod = new DateTime('now');
-$urlModel = new Sitemap_UrlModel($loc, $lastmod);
-craft()->sitemap->addUrl($urlModel);
+craft()->sitemap->addUrl($loc, $lastmod, Sitemap_ChangeFrequency::Yearly, 0.1);
 ```
 
 ##### `addElement(BaseElementModel $element, [$changefreq, [$priority]])`

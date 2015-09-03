@@ -79,15 +79,13 @@ class SitemapService extends BaseApplicationComponent
 
     /**
      * Adds a URL to the sitemap.
-     */
-
-    /**
-     * Adds a URL to the sitemap.
      *
      * @param string   $loc
      * @param DateTime $lastmod
      * @param string   $changefreq
      * @param string   $priority
+     *
+     * @return Sitemap_UrlModel
      */
     public function addUrl($loc, $lastmod, $changefreq = null, $priority = null)
     {

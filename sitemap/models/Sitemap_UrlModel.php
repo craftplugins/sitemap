@@ -32,6 +32,8 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
      *
      * @param string|LocaleModel $hreflang
      * @param string             $href
+     *
+     * @return Sitemap_AlternateUrlModel
      */
     public function addAlternateUrl($hreflang, $href)
     {
