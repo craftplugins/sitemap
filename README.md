@@ -52,11 +52,8 @@ public function renderSitemap()
         // updated. You can pass any time using the DateTime class.
         $lastmod = $locationEntry->dateUpdated;
 
-        // Create a Sitemap_UrlModel instance…
-        $urlModel = new Sitemap_UrlModel($url, $lastmod);
-
-        // … and pass it to the addUrl service method
-        craft()->sitemap->addUrl($urlModel);
+        // Add the URL to the sitemap
+        craft()->sitemap->addUrl($url, $lastmod, Sitemap_ChangeFrequency::Daily, 0.5);
     }
 }
 ```
