@@ -133,6 +133,16 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
+     * {@inheritdoc} BaseModel::rules()
+     */
+    public function rules()
+    {
+        $rules = parent::rules();
+        $rules[] = array('loc', 'CUrlValidator');
+        return $rules;
+    }
+
+    /**
      * {@inheritdoc} BaseModel::defineAttributes()
      */
     protected function defineAttributes()

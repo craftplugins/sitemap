@@ -30,6 +30,16 @@ class Sitemap_AlternateUrlModel extends Sitemap_BaseModel
     }
 
     /**
+     * {@inheritdoc} BaseModel::rules()
+     */
+    public function rules()
+    {
+        $rules = parent::rules();
+        $rules[] = array('href', 'CUrlValidator');
+        return $rules;
+    }
+
+    /**
      * {@inheritdoc} BaseModel::defineAttributes()
      */
     protected function defineAttributes()
