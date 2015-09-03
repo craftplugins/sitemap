@@ -106,7 +106,7 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
     }
 
     /**
-     * {@inheritdoc} BaseModel::setAttribute
+     * {@inheritdoc} BaseModel::setAttribute()
      */
     public function setAttribute($name, $value)
     {

@@ -17,7 +17,7 @@ abstract class Sitemap_Priority extends BaseEnum
     }
 
     /**
-     * {@inheritdoc} BaseEnum::isValidValue
+     * {@inheritdoc} BaseEnum::isValidValue()
      */
     public static function isValidValue($value, $strict = false)
     {
@@ -27,7 +27,7 @@ abstract class Sitemap_Priority extends BaseEnum
     }
 
     /**
-     * {@inheritdoc} BaseEnum::getConstants
+     * {@inheritdoc} BaseEnum::getConstants()
      */
     public static function getConstants()
     {
