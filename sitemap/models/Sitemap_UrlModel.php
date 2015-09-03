@@ -106,7 +106,22 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
             $this->addAlternateUrl($alternateUrl);
         }
 
-        parent::setAttribute($name, $value);
+        if ($name == 'lastmod') {
+            if (!$value instanceof \DateTime) {
+                try {
+                    $value = new DateTime($value);
+                } catch (\Exception $e) {
+                    $message = Craft::t('“{object}->{attribute}” must be a DateTime object or a valid Unix timestamp.', array('object' => get_class($this), 'attribute' => $name));
+                    throw new Exception($message);
+                }
+            }
+            if (new DateTime() < $value) {
+                $message = Craft::t('“{object}->{attribute}” must be in the past.', array('object' => get_class($this), 'attribute' => $name));
+                throw new Exception($message);
+            }
+        }
+
+        return parent::setAttribute($name, $value);
     }
 
     /**
