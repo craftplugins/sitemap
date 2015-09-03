@@ -19,7 +19,7 @@ class Sitemap_UrlModel extends Sitemap_BaseModel
      * @param string             $changefreq
      * @param string             $priority
      */
-    public function __construct($loc, \DateTimeInterface $lastmod, $changefreq = null, $priority = null)
+    public function __construct($loc, $lastmod, $changefreq = null, $priority = null)
     {
         $this->loc = $loc;
         $this->lastmod = $lastmod;
