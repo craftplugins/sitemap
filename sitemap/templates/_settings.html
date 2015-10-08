@@ -54,7 +54,7 @@
           {%- endif -%}
         </td>
         <td>
-          {{- craft.entries.section(section).limit(null)|length -}}
+          {{- craft.entries.section(section).total() -}}
         </td>
         <td>
           {{- forms.selectField({
