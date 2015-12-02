@@ -142,7 +142,7 @@ class SitemapService extends BaseApplicationComponent
     public function addCategoryGroup(CategoryGroupModel $categoryGroup, $changefreq = null, $priority = null)
     {
         $criteria = craft()->elements->getCriteria(ElementType::Category);
-        $criteria->group = $categoryGroup;
+        $criteria->group = $categoryGroup->handle;
 
         $categories = $criteria->find();
         foreach ($categories as $category) {
