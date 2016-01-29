@@ -107,12 +107,31 @@ class SitemapService extends BaseApplicationComponent
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $url = $this->addUrl($element->url, $element->dateUpdated, $changefreq, $priority);
-
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
+        $locale_urls = array();
         foreach ($locales as $locale) {
-            $href = craft()->sitemap->getElementUrlForLocale($element, $locale);
-            $url->addAlternateUrl($locale, $href);
+            $locale_urls[$locale] = craft()->sitemap->getElementUrlForLocale($element, $locale);
+        }
+
+        if(defined('CRAFT_LOCALE')) {
+            // Render sitemap for one specific locale only (single locale domain), e.g. example.de/sitemap.xml
+            
+            $url = $this->addUrl($element->url, $element->dateUpdated, $changefreq, $priority);
+
+            foreach ($locale_urls as $locale => $locale_url) {
+                $url->addAlternateUrl($locale, $locale_url);
+            }
+        }
+        else {
+            // Render sitemap for all locales (multi-locale domain), e.g. example.com/sitemap.xml
+
+            foreach ($locale_urls as $locale => $locale_url) {
+                $url = $this->addUrl($locale_url, $element->dateUpdated, $changefreq, $priority);
+                
+                foreach ($locale_urls as $locale => $locale_url) {
+                    $url->addAlternateUrl($locale, $locale_url);
+                }
+            }
         }
     }
 
