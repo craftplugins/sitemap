@@ -111,8 +111,10 @@ class SitemapService extends BaseApplicationComponent
 
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
         foreach ($locales as $locale) {
-            $href = craft()->sitemap->getElementUrlForLocale($element, $locale);
-            $url->addAlternateUrl($locale, $href);
+            if(!in_array($locale, $this->pluginSettings->attributes['ignoredLocales'])) {
+                $href = craft()->sitemap->getElementUrlForLocale($element, $locale);
+                $url->addAlternateUrl($locale, $href);
+            }
         }
     }
 

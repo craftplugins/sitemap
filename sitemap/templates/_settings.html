@@ -74,3 +74,31 @@
     {% endfor %}
   </tbody>
 </table>
+
+<div class="clear"></div>
+<br />
+
+<h2>{{ 'Ignored Locales'|t }}</h2>
+
+<table class="data fullwidth">
+    <thead>
+        <tr>
+            <th>{{ 'Locale'|t }}</th>
+            <th>{{ 'Ignored'|t }} </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for locale in locales %}
+            <tr>
+                <td>{{ locale.nativeName|ucwords }}</td>
+                <td>
+                    {{- forms.checkbox({
+                        name: "ignoredLocales[#{locale.id}]",
+                        value: true,
+                        checked: locale.id in settings.ignoredLocales
+                    }) -}}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

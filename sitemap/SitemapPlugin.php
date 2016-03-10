@@ -43,6 +43,7 @@ class SitemapPlugin extends BasePlugin
     {
         return array(
             'sections' => array(),
+            'ignoredLocales' => array(),
         );
     }
 
@@ -54,6 +55,7 @@ class SitemapPlugin extends BasePlugin
         return craft()->templates->render('sitemap/_settings', array(
             'sections' => craft()->sitemap->sectionsWithUrls,
             'settings' => $this->settings,
+            'locales' => craft()->i18n->getSiteLocales(),
         ));
     }
 
@@ -74,6 +76,12 @@ class SitemapPlugin extends BasePlugin
                     'changefreq' => $input['changefreq'][$section->id],
                     'priority' => $input['priority'][$section->id],
                 );
+            }
+        }
+
+        foreach(craft()->i18n->getSiteLocales() as $locale) {
+            if($input['ignoredLocales'][$locale->getId()]) {
+                $settings['ignoredLocales'][] = $locale->getId();
             }
         }
 
