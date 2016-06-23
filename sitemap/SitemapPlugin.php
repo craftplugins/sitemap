@@ -68,7 +68,7 @@ class SitemapPlugin extends BasePlugin
         // Loop through valid sections
         foreach (craft()->sitemap->sectionsWithUrls as $section) {
             // Check if the section is enabled
-            if ($input['enabled'][$section->id]) {
+            if (array_key_exists('enabled', $input) && $input['enabled'][$section->id]) {
                 // If it is, save the changefreq and priority values into settings
                 $settings['sections'][$section->id] = array(
                     'changefreq' => $input['changefreq'][$section->id],
