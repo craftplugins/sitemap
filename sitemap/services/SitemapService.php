@@ -107,7 +107,7 @@ class SitemapService extends BaseApplicationComponent
      */
     public function addElement(BaseElementModel $element, $changefreq = null, $priority = null)
     {
-        $url = $this->addUrl($element->url, $element->dateUpdated, $changefreq, $priority);
+        $url = $this->addUrl(ltrim($element->url, '//'), $element->dateUpdated, $changefreq, $priority);
 
         $locales = craft()->elements->getEnabledLocalesForElement($element->id);
         foreach ($locales as $locale) {
@@ -166,7 +166,7 @@ class SitemapService extends BaseApplicationComponent
         $oldUri = $element->uri;
         $element->locale = $locale;
         $element->uri = craft()->elements->getElementUriForLocale($element->id, $locale);
-        $url = $element->getUrl();
+        $url = ltrim($element->getUrl(), "//");
         $element->locale = $oldLocale;
         $element->uri = $oldUri;
 
