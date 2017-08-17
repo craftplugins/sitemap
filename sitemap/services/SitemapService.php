@@ -68,6 +68,16 @@ class SitemapService extends BaseApplicationComponent
         $urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
         $document->appendChild($urlset);
 
+        // Put higher priority urls first
+        usort(
+            $this->urls,
+            function($a, $b) {
+                $a = $a->getAttribute('priority');
+                $b = $b->getAttribute('priority');
+                return ($a > $b) ? -1 : (($a < $b) ? 1 : 0);
+            }
+        );
+
         // Loop through and append Sitemap_UrlModel elements
         foreach ($this->urls as $url) {
             $urlElement = $url->getDomElement($document);
