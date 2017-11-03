@@ -127,6 +127,7 @@ class SitemapService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Entry);
         $criteria->section = $section;
+        $criteria->limit = null;
         foreach ($criteria->find() as $element) {
             $this->addElement($element, $changefreq, $priority);
         }
@@ -143,7 +144,7 @@ class SitemapService extends BaseApplicationComponent
     {
         $criteria = craft()->elements->getCriteria(ElementType::Category);
         $criteria->group = $categoryGroup;
-
+        $criteria->limit = null;
         $categories = $criteria->find();
         foreach ($categories as $category) {
             $this->addElement($category, $changefreq, $priority);
@@ -169,7 +170,6 @@ class SitemapService extends BaseApplicationComponent
         $url = $element->getUrl();
         $element->locale = $oldLocale;
         $element->uri = $oldUri;
-
         return $url;
     }
 
