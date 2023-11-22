@@ -1,3 +1,9 @@
+> [!IMPORTANT]
+>
+> **This plugin is no longer maintained.**
+>
+> We recommend the [SEOmatic plugin](https://plugins.craftcms.com/seomatic) or the [SEO plugin](https://plugins.craftcms.com/seo) instead.
+
 # Craft Sitemap
 
 A simple plugin for [Craft](http://craftcms.com) that generates a [sitemap.xml](http://www.sitemaps.org/) based on enabled sections.
